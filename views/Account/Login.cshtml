@@ -1,0 +1,28 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Project_4_CampusLearn.Views.Account
+{
+    class Login
+    {
+        @model CampusLearn.ViewModels.LoginVm
+        @{ Layout = "_Layout"; }
+        <h2>Login</h2>
+        <form method="post" class="col-12 col-md-6 needs-validation" novalidate>
+            <div class="mb-3">
+                <label>Email</label>
+                <input asp-for="Email" class="form-control" aria-required="true" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label>Password</label>
+                <input asp-for="Password" class="form-control" type="password" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <button class="btn btn-primary">Login</button>
+        </form>
+    }
+}

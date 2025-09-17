@@ -1,0 +1,29 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Project_4_CampusLearn.Views.Materials
+{
+    class Index
+    {
+        @model IEnumerable<CampusLearn.Data.LearningMaterial>
+            @{ Layout = "_Layout"; var topicId = (int)ViewBag.TopicId; }
+            <h2>Materials</h2>
+            <form method="post" enctype="multipart/form-data" action="/materials/@topicId/upload">
+                <input type="hidden" name="__RequestVerificationToken" value="@Antiforgery.GetTokens(HttpContext).RequestToken" />
+                <div class="mb-2"><input type="file" name="file" class="form-control" aria-label="Choose file" /></div>
+                <button class="btn btn-primary">Upload</button>
+            </form>
+            <table class="table table-hover mt-3">
+                <thead><tr><th>File</th><th>Uploaded</th></tr></thead>
+                <tbody>
+                    @foreach (var m in Model)
+                    {
+                        <tr><td><a href="@m.Path" target="_blank" rel="noopener">@m.FileName</a></td><td>@m.UploadedAt.ToLocalTime()</td></tr>
+                    }
+                </tbody>
+            </table>
+    }
+}

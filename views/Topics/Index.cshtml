@@ -1,0 +1,54 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Project_4_CampusLearn.Views.Topics
+{
+    class Index
+    {
+            @model IEnumerable<CampusLearn.Data.Topic>
+                @{ Layout = "_Layout"; }
+                <div class="d-flex justify-content-between align-items-center">
+                    <h2>Topics</h2>
+                    <button class="btn btn-sm btn-primary" onclick="showCreate()">New Topic</button>
+                </div>
+                <table class="table table-striped mt-3">
+                    <thead><tr><th>Title</th><th>Description</th><th>Assignments</th><th></th></tr></thead>
+                    <tbody>
+                        @foreach (var t in Model)
+                        {
+                            <tr>
+                                <td>@t.Title</td>
+                                <td>@t.Description</td>
+                                <td>@t.Assignments.Count</td>
+                                <td>
+                                    <a class="btn btn-sm btn-outline-secondary" href="/materials/@t.Id">Materials</a>
+                                    <a class="btn btn-sm btn-outline-secondary" href="/ChatPage?topicId=@t.Id">Chat</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+                <!-- Accessible modal -->
+                <div id="createModal" class="card p-3" style="display:none" role="dialog" aria-modal="true" aria-labelledby="createTitle">
+                    <h3 id="createTitle">Create Topic</h3>
+                    <div class="mb-2"><input id="title" class="form-control" placeholder="Title" /></div>
+                    <div class="mb-2"><textarea id="desc" class="form-control" placeholder="Description"></textarea></div>
+                    <button class="btn btn-primary" onclick="create()">Save</button>
+                    <button class="btn btn-link" onclick="hideCreate()">Cancel</button>
+                </div>
+
+                <script>
+            function showCreate(){ document.getElementById('createModal').style.display='block'; }
+            function hideCreate(){ document.getElementById('createModal').style.display='none'; }
+            async function create(){
+              const res = await fetch('/api/topics',{method:'POST',headers:{'Content-Type':'application/json'},
+                  body: JSON.stringify({title: document.getElementById('title').value, description: document.getElementById('desc').value})});
+              if(res.ok) location.reload(); else alert('Error creating topic');
+            }
+                </script>
+    }
+}

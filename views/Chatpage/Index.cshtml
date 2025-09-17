@@ -1,0 +1,38 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Project_4_CampusLearn.Views.Chatpage
+{
+    class Index
+    {
+        @{ Layout = "_Layout"; var topicId = (int)ViewBag.TopicId; }
+        <h2>Topic Chat</h2>
+        <div id="list" class="border p-2 bg-white" style="height:300px; overflow:auto"></div>
+        <div class="input-group mt-2">
+            <input id="msg" class="form-control" placeholder="Type message (Enter to send)" aria-label="Chat input" />
+            <button class="btn btn-primary" onclick="send()">Send</button>
+        </div>
+        <script>
+        let lastId = 0;
+        async function load(){
+          const res = await fetch(`/api/chat/${@topicId}?lastId=${lastId}`);
+          const data = await res.json();
+          if(data.length){
+            const box = document.getElementById('list');
+            data.forEach(m => { lastId = Math.max(lastId, m.id); const p=document.createElement('div'); p.textContent = `[${new Date(m.sentAt).toLocaleTimeString()}] ${m.text}`; box.appendChild(p); });
+            box.scrollTop = box.scrollHeight;
+          }
+        }
+        async function send(){
+          const text = document.getElementById('msg').value;
+          await fetch(`/api/chat/${@topicId}`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(text) });
+          document.getElementById('msg').value = '';
+          load();
+        }
+        setInterval(load, 1500);
+        </script>
+    }
+}
